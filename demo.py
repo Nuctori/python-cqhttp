@@ -1,20 +1,30 @@
-from cqhttp import CQHttp, Error
+from cqhttp_extend import CQHttp, Error
+
 
 bot = CQHttp(api_root='http://127.0.0.1:5700/',
              access_token='123',
-             secret='abc')
-
+             secret='114514')
 
 @bot.on_message()
 def handle_msg(context):
-    # 下面这句等价于 bot.send_private_msg(user_id=context['user_id'], message='你好呀，下面一条是你刚刚发的：')
+    # on_message 装饰器仍能正常使用
+    '''
     try:
         bot.send(context, '你好呀，下面一条是你刚刚发的：')
     except Error:
         pass
     return {'reply': context['message'],
             'at_sender': False}  # 返回给 HTTP API 插件，走快速回复途径
+    '''
+    pass
 
+@bot.MsgRoutes.route('hello')
+def _(context):
+    bot.send(context,'你好')
+
+@bot.MsgRoutes.groupRoute('测试')
+def _(context):
+    bot.send(context,'群消息测试成功')
 
 @bot.on_notice('group_increase')  # 如果插件版本是 3.x，这里需要使用 @bot.on_event
 def handle_group_increase(context):
@@ -34,4 +44,4 @@ def handle_group_request(context):
     return {'approve': True}
 
 
-bot.run(host='127.0.0.1', port=8080)
+bot.run(host='127.0.0.1', port=5000)

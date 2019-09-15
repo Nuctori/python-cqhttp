@@ -34,7 +34,7 @@ def _deco_maker(post_type):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 return func(*args, **kwargs)
-
+            print(post_type,types)
             if types:
                 for t in types:
                     self._handlers[post_type][t] = wrapper
@@ -99,6 +99,7 @@ class CQHttp:
         if handler:
             response = handler(payload)
             return jsonify(response) if isinstance(response, dict) else ''
+        
         return ''
 
     def run(self, host=None, port=None, **kwargs):
